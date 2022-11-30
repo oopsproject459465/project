@@ -1,4 +1,4 @@
- #include <iostream>
+#include <iostream>
 #include <ctime>
 #include <string>
 #include <stdlib.h>
@@ -6,19 +6,20 @@ using namespace std;
 class Number{
 public:
     int num1,num2,sum,extraCard;
-};
-
-    const string RESET = "\e[0m";   //Format Mode 0
-    const string BOLD_HIGHLIGHT  = "\e[1;7m";   //Format Modes 1 and 7
-    const string COMPLEX_FORMAT_1 = "\x1b[5;1;3;35;44m";  //Format Modes 5, 1, 2, 35 and 44
-    const string COMPLEX_FORMAT_2 = "\x1b[4;30;42m";      //Format Modes 4, 30 and 42
-    const string COMPLEX_FORMAT_3 = "\x1b[5;1m";
-    
 void printCard1(int num1,int num2, int num3, int sum);
 void printCard2(int num1,int num2, int sum);
 bool playAgain(char x,int money);
-int winnerFunction(int bankerCard, int playerCard); 
+int winnerFunction(int banker_Card, int player_Card); 
 int declareWinner(int winner, int decision, int bet); 
+
+};
+
+    const string RESET = "\e[0m";   
+    const string BOLD_HIGHLIGHT  = "\e[1;7m";  
+    const string COMPLEX_FORMAT_1 = "\x1b[5;1;3;35;44m";  
+    const string COMPLEX_FORMAT_2 = "\x1b[4;30;42m";      
+    const string COMPLEX_FORMAT_3 = "\x1b[5;1m";
+    
 
 
 int main(){
@@ -82,70 +83,68 @@ int main(){
         banker.sum = banker.num1 + banker.num2;
         banker.sum = banker.sum % 10;
 
-        //checks if card is natural win 8 or 9
+
         if(banker.sum != 9 && banker.sum != 8){
 
-            banker.extraCard = rand() % 10 + 1; //Third and extra card
+            banker.extraCard = rand() % 10 + 1; 
             banker.sum += banker.extraCard;
-            banker.sum = banker.sum % 10; //gets remainder of 3 cards as final card
+            banker.sum = banker.sum % 10; 
         
-        //prints banker's card
-        printCard1(banker.num1, banker.num2, banker.extraCard, banker.sum);
+        
+        banker.printCard1(banker.num1, banker.num2, banker.extraCard, banker.sum);
         }
         else{
-        //Natural win 8 or 9 and prints cards
-        printCard2(banker.num1, banker.num2, banker.sum);
+        
+        banker.printCard2(banker.num1, banker.num2, banker.sum);
         }
 
 
-        //PLAYER CARDS
+        
         cout<< "\n";
         cout<< "\n\n\t\t\t\t<+><+><+><+><+><+><+><+><+><+><+><+><+><+><+><+>\n";
         cout<< "\t\t\t\t^\t\t" << "PLAYER'S CARD" <<"\t\t\t^\n";
         cout<< "\t\t\t\t<+><+><+><+><+><+><+><+><+><+><+><+><+><+><+><+>\n\n";
 
-        //random number generator for 2 cards
+        
         Number player;
         player.num1 = rand() % 10 + 1;
         player.num2 = rand() % 10 + 1;
         player.sum = player.num1 + player.num2;
         player.sum = player.sum % 10;
 
-        //checks if 2 cards are natural win 8 or 9
+        
         if(player.sum != 9 && player.sum != 8){
 
-            player.extraCard = rand() % 10 + 1; //Third and extra card
+            player.extraCard = rand() % 10 + 1;
             player.sum += player.extraCard;
-            player.sum = player.sum % 10; //gets remainder of 3 cards as final card
+            player.sum = player.sum % 10; 
             
-        //function to print card of players
-        printCard1(player.num1,player.num2,player.extraCard,player.sum);
+        
+        player.printCard1(player.num1,player.num2,player.extraCard,player.sum);
         }
         else{
 
-        //natural win 8 or 9, print card of player
-        printCard2(player.num1, player.num2, player.sum);
+        
+        player.printCard2(player.num1, player.num2, player.sum);
         }
 
-    //declaration of winner
-    winner = winnerFunction(banker.sum, player.sum);
+    winner = banker.winnerFunction(banker.sum, player.sum);
 
-    //awards prize for winner, 1:1 for winner;
-    prize = declareWinner(winner, decision, bet);
+   
+    prize = banker.declareWinner(winner, decision, bet);
     cout<< "\x1b[46m PHP " << prize <<  "\x1b[0m\n";
     money += prize;
     cout<< "\x1b[46m Current Money, PHP " << money << " \x1b[0m\n\n";
 
-    //Asks the user if he wants to play again
     cout<< "\x1b[46m PLAY AGAIN? Y/N  \x1b[0m";
     cin >> play;
-    logic = playAgain(play,money);
+    logic = banker.playAgain(play,money);
     i++;
     }while(logic != false);
 
 }
 int i=0;
-void printCard1(int num1,int num2, int num3, int sum){
+void Number::printCard1(int num1,int num2, int num3, int sum){
     
     if(i==0)
     {
@@ -175,7 +174,7 @@ void printCard1(int num1,int num2, int num3, int sum){
     cout<< "\x1b[42m EXTRA CARD " << num3<<"\x1b[0m";
     //cout<< "CARD "<< sum << "\n";
 }
-void printCard2(int num1,int num2, int sum){
+void Number::printCard2(int num1,int num2, int sum){
 
     cout<< "\t\t\t\t\t\t\x1b[46m|<><><*><><>|\x1b[0m\n";
     cout<< "\t\t\t\t\t\t\x1b[46m|>|       |<|\x1b[0m\n";
@@ -190,7 +189,7 @@ void printCard2(int num1,int num2, int sum){
     //cout<< "CARD " << sum << "\n";
 }
 
-bool playAgain(char x,int money){
+bool Number:: playAgain(char x,int money){
 
     if(money > 0){
 
@@ -210,36 +209,36 @@ bool playAgain(char x,int money){
 
 }
 
-int winnerFunction(int bankerCard, int playerCard){
-    //function to determine nearest number to 9
-    //returns 1,2,3 depending on condiiton met
+int Number::winnerFunction(int banker_Card, int player_Card){
+    
+    
 
     cout<< "\n\n\n>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<>^<\n\n";
-    if(bankerCard > playerCard){
+    if(banker_Card > player_Card){
 
         cout<< "\n\x1b[46mBANKER WIN, \x1b[0m";
         return 1;
-    }else if( bankerCard < playerCard){
+    }else if( banker_Card < player_Card){
 
         cout<< "\n\x1b[46mPLAYER WIN, \x1b[0m";
         return 2;
 
-    }else if(bankerCard == playerCard){
+    }else if(banker_Card == player_Card){
 
         cout<< "\n\x1b[46mDRAW, \x1b[0m";
         return 3;
     }
 }
-int declareWinner(int winner, int decision, int bet){
+int Number::declareWinner(int winner, int decision, int bet){
 
     if(winner == decision){
 
-        //win pays the bet
+        
         cout<< "\x1b[46mYOU WIN!\x1b[0m\n";
         return bet;
     }if (winner == 3){
 
-        //draw
+        
         cout<< "\x1b[46mTIE GAME!\x1b[0m" << endl;
         return 0;
     }else{
